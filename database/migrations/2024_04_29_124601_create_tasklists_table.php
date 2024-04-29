@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('description');
             $table->enum('indicator', ['Sales', 'Report']);
             $table->date('deadline');
-            $table->date('actual');
+            $table->date('actual_date');
+            $table->integer('indicator_target');
+            $table->integer('indicator_weight');
+            $table->integer('indicator_late');
             $table->string('createdBy')->default('System');
             $table->timestamp('createdAt')->default(now());
             $table->string('updatedBy')->nullable(true)->default(null);
