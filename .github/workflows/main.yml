@@ -1,0 +1,89 @@
+on:
+  push:
+    branches:
+      - "main"
+
+env:
+  image_name: ${{ github.event.repository.name }}
+
+name: 📜 Test, pack & ship!
+jobs:
+  build:
+    name: 📦 Build the app
+    runs-on: ubuntu-latest
+    outputs:
+      latest_version: ${{steps.push-image.outputs.version}}
+    steps:
+    - name: 🐙 Git checkout
+      uses: actions/checkout@v4
+    - name: 📁 Make sure repository is latest
+      run: git fetch --prune --unshallow
+    - name: 🐳 Build image
+      run: docker build . --file Dockerfile --tag $image_name --label "runnumber=${GITHUB_RUN_ID}"
+    - name: 🔑 Log in to registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+    - id: push-image
+      name: 🛳️ Push image
+      run: |
+        image_id=ghcr.io/${{ github.repository_owner }}/$image_name
+        image_id=$(echo $image_id | tr '[A-Z]' '[a-z]')
+        latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+        latest_tag=$(echo $latest_tag | sed -e 's/^v//')
+        echo image_id=$image_id
+        echo latest_tag=$latest_tag
+        echo "version=$latest_tag" >> $GITHUB_OUTPUT
+        docker tag $image_name $image_id:$latest_tag
+        docker push $image_id:$latest_tag
+  deploy:
+    needs: build
+    name: 🖥️ Upload to server
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - name: 🐙 Git checkout
+      uses: actions/checkout@v4
+    - name: 📁 Make sure repository is latest
+      run: git fetch --prune --unshallow
+    - name: ▶️ Running shell script
+      run: |
+        cd .docker/server
+        bash bin/create-storage.sh
+        bash bin/generate-env.sh
+    - name: 🚀 Update server
+      uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+      with:
+        host: ${{ secrets.SERVER }}
+        user: ${{ secrets.USERNAME }}
+        pass: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.SSH_PORT }}
+        connect_timeout: 60m
+        scp: |
+          '.docker/server/.env' => ${{ secrets.DIRECTORY }}
+          '.docker/server/run.sh' => ${{ secrets.DIRECTORY }}
+          '.docker/server/storage' => ${{ secrets.DIRECTORY }}
+          '.docker/server/docker-compose.yml' => ${{ secrets.DIRECTORY }}
+        last_ssh: |
+          cd ${{ secrets.DIRECTORY }}
+          sed -i "s/DOCKER_IMAGE_VERSION=.*/DOCKER_IMAGE_VERSION=${{ needs.build.outputs.latest_version }}/g" .env
+          sed -i "s/DB_USERNAME=.*/DB_USERNAME=${{secrets.DB_USERNAME}}/g" .env
+          sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${{secrets.DB_PASSWORD}}/g" .env
+          sed -i "s/DOCKER_DATABASE_USERNAME=.*/DOCKER_DATABASE_USERNAME=${{secrets.DOCKER_DATABASE_USERNAME}}/g" .env
+          sed -i "s/DOCKER_DATABASE_PASSWORD=.*/DOCKER_DATABASE_PASSWORD=${{secrets.DOCKER_DATABASE_PASSWORD}}/g" .env
+          bash run.sh
+  tagging:
+    needs: [build, deploy]
+    name: 🏷️ Tagging the app
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🐙 Git checkout
+        uses: actions/checkout@v4
+      - name: 📁 Make sure repository is latest
+        run: git fetch --prune --unshallow
+      - name: 🔖 Create tag
+        uses: kangketikonlen/base-tagging@main
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
+          REPO_TYPE: ${{ github.event.repository.owner.type }}
+          REPO_OWNER: ${{ github.event.repository.owner.name }}
+          PERSONAL_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+          PRESERVE_VERSION: 5

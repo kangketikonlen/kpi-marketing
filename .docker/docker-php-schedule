@@ -1,0 +1,1 @@
+* * * * * bash /usr/bin/laravel-schedule.sh >> /var/log/cron.log
