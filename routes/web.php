@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\EmployeeController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Setting\IndicatorWeightController;
 use App\Http\Controllers\Setting\InstitutionController;
 use App\Http\Controllers\Setting\ModuleCustomController;
 
@@ -74,6 +75,13 @@ Route::namespace('Setting')->prefix('setting')->middleware('auth:web')->group(fu
         Route::get('/{moduleCustom}/edit', [ModuleCustomController::class, 'edit']);
         Route::put('/{moduleCustom}/update', [ModuleCustomController::class, 'update']);
         Route::delete('/{moduleCustom}/delete', [ModuleCustomController::class, 'delete']);
+    });
+    Route::prefix('indicator-weight')->middleware('auth:web')->group(function () {
+        Route::get('/', [IndicatorWeightController::class, 'index']);
+        Route::get('/create', [IndicatorWeightController::class, 'create']);
+        Route::post('/store', [IndicatorWeightController::class, 'store']);
+        Route::delete('/{indicatorWeight}/delete', [IndicatorWeightController::class, 'delete']);
+        Route::get('/options', [IndicatorWeightController::class, 'options']);
     });
 });
 
