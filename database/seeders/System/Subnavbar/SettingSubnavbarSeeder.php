@@ -29,7 +29,7 @@ class SettingSubnavbarSeeder extends Seeder
         Subnavbar::create([
             'navbar_id' => '2',
             'name' => 'Bobot KPI',
-            'url' => '/setting/weight',
+            'url' => '/setting/indicator-weight',
             'roles' => 'kpi'
         ]);
     }

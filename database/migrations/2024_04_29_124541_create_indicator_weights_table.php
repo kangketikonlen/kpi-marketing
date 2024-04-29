@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedInteger('weight_percentage');
             $table->integer('late_percentage');
             $table->enum('type', ['Sales', 'Report']);
-            $table->enum('status', ['Aktif', 'Tidak Aktif']);
             $table->string('createdBy')->default('System');
             $table->timestamp('createdAt')->default(now());
             $table->string('updatedBy')->nullable(true)->default(null);
