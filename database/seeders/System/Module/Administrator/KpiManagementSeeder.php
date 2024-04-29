@@ -1,13 +1,13 @@
 <?php
 
-namespace Database\Seeders\System\Module\Support;
+namespace Database\Seeders\System\Module\Administrator;
 
 use App\Models\System\Module;
 use App\Models\System\Navbar;
 use Illuminate\Database\Seeder;
 use App\Models\System\Subnavbar;
 
-class GeneralSettingSeeder extends Seeder
+class KpiManagementSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -22,25 +22,25 @@ class GeneralSettingSeeder extends Seeder
         //
         $navbarArray = [];
         foreach ($navbars as $navbar) {
-            if (in_array('general', explode(',', $navbar->roles))) {
+            if (in_array('kpi', explode(',', $navbar->roles))) {
                 $navbarArray[] = $navbar->id;
             }
         }
         $subnavbarArray = [];
         foreach ($subnavbars as $subnavbar) {
-            if ($subnavbar->roles === 'general') {
+            if ($subnavbar->roles === 'kpi') {
                 $subnavbarArray[] = $subnavbar->id;
             }
         }
         Module::create([
             'code' => $code,
-            'icon' => 'fa-wrench',
-            'description' => 'General Setting',
+            'icon' => 'fa-chart-line',
+            'description' => 'KPI Management',
             'url' => '/dashboard/switch?mod=' . $code,
             'navbars' => implode(',', $navbarArray),
             'subnavbars' => implode(',', $subnavbarArray),
-            'roles' => 1,
-            'role_code' => 'general'
+            'roles' => 2,
+            'role_code' => 'kpi'
         ]);
     }
 }

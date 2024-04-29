@@ -3,6 +3,7 @@
 namespace Database\Seeders\System;
 
 use App\Models\System\Module;
+use Database\Seeders\System\Module\AdministratorModuleSeeder;
 use Database\Seeders\System\Module\SupportModuleSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -21,5 +22,6 @@ class ModuleSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
         $this->call(SupportModuleSeeder::class);
+        $this->call(AdministratorModuleSeeder::class);
     }
 }
