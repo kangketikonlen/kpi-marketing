@@ -100,4 +100,57 @@ class TasklistService
             ];
         });
     }
+
+    public function generate_performance_report_chart_data()
+    {
+        $salesWeight = IndicatorWeight::where('type', 'Sales')->first();
+        $reportWeight = IndicatorWeight::where('type', 'Report')->first();
+
+        $chartData = [
+            'labels' => [],
+            'datasets' => [
+                [
+                    'label' => 'KPI',
+                    'backgroundColor' => 'rgba(75, 192, 192, 0.2)',
+                    'borderColor' => 'rgba(75, 192, 192, 1)',
+                    'borderWidth' => 1,
+                    'data' => [],
+                ],
+            ],
+        ];
+
+        $employees = Employee::all();
+        foreach ($employees as $employee) {
+            $salesTasklists = Tasklist::where(['employee_id' => $employee->id, 'indicator' => 'Sales']);
+            $salesCount = $salesTasklists->count();
+
+            $salesWeightLate = 0;
+            foreach ($salesTasklists->get() as $salesTasklist) {
+                if ($salesTasklist->actual_date > $salesTasklist->deadline) {
+                    $salesWeightLate += $salesWeight->late_percentage;
+                }
+            }
+
+            $reportTasklists = Tasklist::where(['employee_id' => $employee->id, 'indicator' => 'Report']);
+            $reportCount = $reportTasklists->count();
+
+            $reportWeightLate = 0;
+            foreach ($reportTasklists->get() as $reportTasklist) {
+                if ($reportTasklist->actual_date > $reportTasklist->deadline) {
+                    $reportWeightLate += $reportWeight->late_percentage;
+                }
+            }
+
+            $sWeight = ($salesCount / $salesWeight->target) * $salesWeight->weight_percentage;
+            $rWeight = ($reportCount / $reportWeight->target) * $reportWeight->weight_percentage;
+
+            $kpi = ($sWeight + $rWeight) - ($salesWeightLate + $reportWeightLate);
+
+            // Add data to chartData
+            $chartData['labels'][] = $employee->fullname;
+            $chartData['datasets'][0]['data'][] = $kpi;
+        }
+
+        return $chartData;
+    }
 }

@@ -20,6 +20,7 @@ class KpiLogController extends Controller
     public function index(Request $request)
     {
         $data['performances'] = $this->tasklistService->generate_performance_report();
+        $data['performanceChartData'] = $this->tasklistService->generate_performance_report_chart_data();
         return view('pages.report.kpi-log.index', $data);
     }
 }
