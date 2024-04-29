@@ -1,6 +1,6 @@
 <div class="card mb-5">
     <div class="card-header pt-2 pb-2">
-        <h4 class="fw-bold m-0">Report</h4>
+        <h4 class="fw-bold m-0">Report KPI</h4>
     </div>
     <div class="card-body table-responsive">
         @if (session('alert'))

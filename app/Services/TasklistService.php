@@ -153,4 +153,107 @@ class TasklistService
 
         return $chartData;
     }
+
+    public function generate_tasklist_performances_report()
+    {
+        return Employee::all()->map(function ($employee) {
+            $onTimeCount = 0;
+            $lateCount = 0;
+
+            // Fetch tasklists for the employee
+            $tasklists = Tasklist::where('employee_id', $employee->id)->get();
+
+            foreach ($tasklists as $tasklist) {
+                // Calculate the difference between actual and deadline
+                $dateDiff = strtotime($tasklist->actual_date) - strtotime($tasklist->deadline);
+
+                // Check if the tasklist is on time or late
+                if ($dateDiff >= 0) {
+                    $onTimeCount++;
+                } else {
+                    $lateCount++;
+                }
+            }
+
+            // Calculate percentages
+            $totalCount = count($tasklists);
+            $percentOnTime = ($onTimeCount / $totalCount) * 100;
+            $percentLate = ($lateCount / $totalCount) * 100;
+
+            return [
+                'employee_id' => $employee->id,
+                'name' => $employee->fullname,
+                'ontime_total' => $onTimeCount,
+                'late_total' => $lateCount,
+                'ontime_percentage' => $percentOnTime,
+                'late_percentage' => $percentLate
+            ];
+        });
+    }
+
+    public function generate_tasklist_performances_chart()
+    {
+        // Initialize arrays to store data for the chart
+        $employeeNames = [];
+        $ontimePercentages = [];
+        $latePercentages = [];
+
+        // Fetch all employees
+        $employees = Employee::all();
+
+        // Iterate through each employee
+        foreach ($employees as $employee) {
+            $onTimeCount = 0;
+            $lateCount = 0;
+
+            // Fetch tasklists for the employee
+            $tasklists = Tasklist::where('employee_id', $employee->id)->get();
+
+            // Iterate through each tasklist
+            foreach ($tasklists as $tasklist) {
+                // Calculate the difference between actual and deadline
+                $dateDiff = strtotime($tasklist->actual_date) - strtotime($tasklist->deadline);
+
+                // Check if the tasklist is on time or late
+                if ($dateDiff >= 0) {
+                    $onTimeCount++;
+                } else {
+                    $lateCount++;
+                }
+            }
+
+            // Calculate percentages
+            $totalCount = count($tasklists);
+            $percentOnTime = ($onTimeCount / $totalCount) * 100;
+            $percentLate = ($lateCount / $totalCount) * 100;
+
+            // Store data for the current employee
+            $employeeNames[] = $employee->fullname;
+            $ontimePercentages[] = $percentOnTime;
+            $latePercentages[] = $percentLate;
+        }
+
+        // Prepare data in a format suitable for Chart.js
+        $chartData = [
+            'labels' => $employeeNames,
+            'datasets' => [
+                [
+                    'label' => 'On Time',
+                    'data' => $ontimePercentages,
+                    'backgroundColor' => 'rgba(75, 192, 192, 0.2)', // Adjust colors as needed
+                    'borderColor' => 'rgba(75, 192, 192, 1)', // Adjust colors as needed
+                    'borderWidth' => 1
+                ],
+                [
+                    'label' => 'Late',
+                    'data' => $latePercentages,
+                    'backgroundColor' => 'rgba(255, 99, 132, 0.2)', // Adjust colors as needed
+                    'borderColor' => 'rgba(255, 99, 132, 1)', // Adjust colors as needed
+                    'borderWidth' => 1
+                ]
+            ]
+        ];
+
+        return $chartData;
+    }
 }

@@ -21,6 +21,8 @@ class KpiLogController extends Controller
     {
         $data['performances'] = $this->tasklistService->generate_performance_report();
         $data['performanceChartData'] = $this->tasklistService->generate_performance_report_chart_data();
+        $data['tasklistPerformances'] = $this->tasklistService->generate_tasklist_performances_report();
+        $data['tasklistPerformanceChartData'] = $this->tasklistService->generate_tasklist_performances_chart();
         return view('pages.report.kpi-log.index', $data);
     }
 }
