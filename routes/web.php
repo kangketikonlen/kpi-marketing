@@ -1,11 +1,10 @@
 <?php
 
 use App\Http\Controllers\Administration\MaintenanceController;
-use App\Http\Controllers\Report\ActivityLogController;
-use App\Http\Controllers\Report\CrashLogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PortalController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Master\EmployeeController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Setting\InstitutionController;
@@ -49,6 +48,15 @@ Route::namespace('Master')->prefix('master')->middleware('auth:web')->group(func
         Route::patch('/{user}/reset', [UserController::class, 'reset_password']);
         Route::delete('/{user}/delete', [UserController::class, 'delete']);
         Route::get('/options', [UserController::class, 'options']);
+    });
+    Route::prefix('employee')->middleware('auth:web')->group(function () {
+        Route::get('/', [EmployeeController::class, 'index']);
+        Route::get('/create', [EmployeeController::class, 'create']);
+        Route::post('/store', [EmployeeController::class, 'store']);
+        Route::get('/{employee}/edit', [EmployeeController::class, 'edit']);
+        Route::put('/{employee}/update', [EmployeeController::class, 'update']);
+        Route::delete('/{employee}/delete', [EmployeeController::class, 'delete']);
+        Route::get('/options', [EmployeeController::class, 'options']);
     });
 });
 
