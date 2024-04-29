@@ -25,5 +25,12 @@ class SettingSubnavbarSeeder extends Seeder
             'url' => '/setting/custom-module',
             'roles' => 'general'
         ]);
+
+        Subnavbar::create([
+            'navbar_id' => '2',
+            'name' => 'Bobot KPI',
+            'url' => '/setting/weight',
+            'roles' => 'kpi'
+        ]);
     }
 }

@@ -26,17 +26,8 @@ class RoleSeeder extends Seeder
             'code' => 'RLS-' . date("ymd") . '-' . str_pad(strval($count), 4, "0", STR_PAD_LEFT),
             'name' => 'admin',
             'description' => 'Administrator',
-            'dashboard_url' => '/dashboard/administration',
+            'dashboard_url' => '/dashboard/administrator',
             'is_landing' => 1
-        ]);
-
-        $count += 1;
-        Role::create([
-            'code' => 'RLS-' . date("ymd") . '-' . str_pad(strval($count), 4, "0", STR_PAD_LEFT),
-            'name' => 'general',
-            'description' => 'General Setting',
-            'dashboard_url' => '/dashboard/general',
-            'is_landing' => 0
         ]);
     }
 }

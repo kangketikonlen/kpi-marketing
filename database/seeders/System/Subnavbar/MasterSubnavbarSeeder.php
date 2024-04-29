@@ -18,5 +18,12 @@ class MasterSubnavbarSeeder extends Seeder
             'url' => '/master/user',
             'roles' => 'general'
         ]);
+
+        Subnavbar::create([
+            'navbar_id' => '1',
+            'name' => 'Karyawan',
+            'url' => '/master/employee',
+            'roles' => 'kpi'
+        ]);
     }
 }

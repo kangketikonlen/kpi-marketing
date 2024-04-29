@@ -3,7 +3,7 @@
          <h4 class="m-0">Modul Utama</h4>
      </div>
      <div class="card-body p-2">
-         <ul class="nav row">
+         <ul class="nav row text-center">
              @foreach ($modules as $module)
                  @if (in_array(session('role_id'), explode(',', $module->roles)))
                      <li class="nav-item col-2">

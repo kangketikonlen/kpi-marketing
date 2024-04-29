@@ -18,7 +18,7 @@ class InstitutionSeeder extends Seeder
             'email' => 'info@kangketik.online',
             'website' => 'https://kangketik.online',
             'appUrl' => 'http://localhost:8000',
-            'contact' => '085161284041'
+            'contact' => '08112402761'
         ]);
     }
 }

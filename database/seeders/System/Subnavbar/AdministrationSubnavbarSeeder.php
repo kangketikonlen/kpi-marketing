@@ -18,5 +18,12 @@ class AdministrationSubnavbarSeeder extends Seeder
             'url' => '/administration/maintenance',
             'roles' => 'general'
         ]);
+
+        Subnavbar::create([
+            'navbar_id' => '3',
+            'name' => 'Penugasan (Tasklist)',
+            'url' => '/administration/tasklist',
+            'roles' => 'kpi'
+        ]);
     }
 }
