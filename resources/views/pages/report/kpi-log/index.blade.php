@@ -38,6 +38,27 @@
                 }
             });
         });
+        // JavaScript code to create the chart
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('taskListChart').getContext('2d');
+            var chartData = @json(
+                $tasklistPerformanceChartData,
+                JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);;
+
+            var taskListChart = new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        });
     </script>
 @endsection
 
@@ -51,6 +72,8 @@
         @include('pages.report.kpi-log.components.sales-card')
         @include('pages.report.kpi-log.components.report-card')
         @include('pages.report.kpi-log.components.kpi-chart-card')
+        @include('pages.report.kpi-log.components.tasklist-performance-card')
+        @include('pages.report.kpi-log.components.tasklist-chart-card')
         <!-- Item List End -->
     </div>
 @endsection
