@@ -22,7 +22,7 @@ class ReportSubnavbarSeeder extends Seeder
         Subnavbar::create([
             'navbar_id' => '4',
             'name' => 'Indikator Kinerja (KPI)',
-            'url' => '/report/activity-log',
+            'url' => '/report/kpi-log',
             'roles' => 'kpi'
         ]);
     }
