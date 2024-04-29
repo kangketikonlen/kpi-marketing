@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\EmployeeController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Report\KpiLogController;
 use App\Http\Controllers\Setting\IndicatorWeightController;
 use App\Http\Controllers\Setting\InstitutionController;
 use App\Http\Controllers\Setting\ModuleCustomController;
@@ -99,5 +100,10 @@ Route::namespace('Administration')->prefix('administration')->middleware('auth:w
         Route::put('/{tasklist}/update', [TasklistController::class, 'update']);
         Route::delete('/{tasklist}/delete', [TasklistController::class, 'delete']);
         Route::get('/options', [TasklistController::class, 'options']);
+    });
+});
+Route::namespace('Report')->prefix('report')->middleware('auth:web')->group(function () {
+    Route::prefix('kpi-log')->middleware('auth:web')->group(function () {
+        Route::get('/', [KpiLogController::class, 'index']);
     });
 });
