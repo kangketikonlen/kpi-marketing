@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Administration\MaintenanceController;
+use App\Http\Controllers\Administration\TasklistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PortalController;
 use App\Http\Controllers\DashboardController;
@@ -89,5 +90,14 @@ Route::namespace('Administration')->prefix('administration')->middleware('auth:w
     Route::prefix('maintenance')->middleware('auth:web')->group(function () {
         Route::get('/', [MaintenanceController::class, 'index']);
         Route::get('/process', [MaintenanceController::class, 'process']);
+    });
+    Route::prefix('tasklist')->middleware('auth:web')->group(function () {
+        Route::get('/', [TasklistController::class, 'index']);
+        Route::get('/create', [TasklistController::class, 'create']);
+        Route::post('/store', [TasklistController::class, 'store']);
+        Route::get('/{tasklist}/edit', [TasklistController::class, 'edit']);
+        Route::put('/{tasklist}/update', [TasklistController::class, 'update']);
+        Route::delete('/{tasklist}/delete', [TasklistController::class, 'delete']);
+        Route::get('/options', [TasklistController::class, 'options']);
     });
 });

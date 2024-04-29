@@ -22,6 +22,12 @@ class IndicatorWeightService
         return $this->service->paginate(10)->appends(request()->query());
     }
 
+    public function find_by_type(string $type)
+    {
+        $this->service->where('type', $type);
+        return $this->service->first();
+    }
+
     public function store(array $formFields)
     {
         $this->service->create($formFields);
