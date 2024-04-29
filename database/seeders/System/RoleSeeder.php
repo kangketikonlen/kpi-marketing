@@ -27,7 +27,7 @@ class RoleSeeder extends Seeder
             'name' => 'admin',
             'description' => 'Administrator',
             'dashboard_url' => '/dashboard/administrator',
-            'is_landing' => 0
+            'is_landing' => 1
         ]);
     }
 }
