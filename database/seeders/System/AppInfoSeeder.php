@@ -13,10 +13,10 @@ class AppInfoSeeder extends Seeder
     public function run(): void
     {
         AppInfo::create([
-            'name' => 'Larapulse',
-            'description' => 'Larapulse Anda adalah implementasi kustom dari kerangka kerja PHP populer, Laravel. Didesain sesuai kebutuhan dengan fitur dan optimasi yang disesuaikan untuk meningkatkan efisiensi, fleksibilitas, dan performa pengembangan.',
+            'name' => 'KPI Marketing Insight',
+            'description' => 'KPI Marketing Insight: Solusi analisis pemasaran dengan antarmuka mudah dan kemampuan analitik yang kuat untuk profesional pemasaran.',
             'dev' => 'Kangketik Dev',
-            'dev_url' => 'https://kangketik.online/',
+            'dev_url' => 'https://kangketik.online',
             'registered' => 'Kangketik Developer'
         ]);
     }
